@@ -1,0 +1,27 @@
+# Editor and OS noise
+*.swp
+*~
+.DS_Store
+
+# Nothing generated is ignored on purpose. The files Matugen rewrites
+# (settings/colors.lua, waybar/colors.css, swaync/colors.css,
+# rofi/colors.rasi, kitty/colors.conf, gtk-*/gtk.css, hyprlock-colors.conf)
+# are COMMITTED with seed palettes, because several of them are hard
+# requirements for their consumer to start at all — a missing
+# waybar/colors.css stops Waybar rendering, and a missing colors.rasi makes
+# rofi fail theme validation.
+#
+# The cost is that `git status` shows them dirty after your first wallpaper
+# change. Silence that without untracking them:
+#
+#   git update-index --skip-worktree \
+#       config/hypr/settings/colors.lua \
+#       config/hypr/hyprlock-colors.conf \
+#       config/waybar/colors.css \
+#       config/swaync/colors.css \
+#       config/rofi/colors.rasi \
+#       config/kitty/colors.conf \
+#       config/gtk-3.0/gtk.css \
+#       config/gtk-4.0/gtk.css
+#
+# Undo with --no-skip-worktree when you want to commit a new seed.

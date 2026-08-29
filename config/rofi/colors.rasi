@@ -1,0 +1,11 @@
+/* SEED PALETTE — overwritten by Matugen on the first wallpaper change. */
+* {
+    primary:     #89b4fa;
+    on-primary:  #1e1e2e;
+    secondary:   #a6e3a1;
+    surface:     #1e1e2e;
+    surface-alt: #313244;
+    on-surface:  #cdd6f4;
+    outline:     #45475a;
+    error:       #f38ba8;
+}

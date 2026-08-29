@@ -1,0 +1,123 @@
+{
+  // ====================================================================
+  // Waybar
+  // ====================================================================
+  // Colours live entirely in style.css, which imports colors.css — the
+  // file Matugen regenerates. Nothing in this file needs to change when
+  // the wallpaper does.
+  // ====================================================================
+
+  "layer": "top",
+  "position": "top",
+  "height": 34,
+  "spacing": 4,
+  "margin-top": 4,
+  "margin-left": 8,
+  "margin-right": 8,
+
+  "modules-left":   ["hyprland/workspaces", "custom/recording", "hyprland/window"],
+  "modules-center": ["clock"],
+  "modules-right":  ["tray", "pulseaudio", "backlight", "bluetooth", "network", "battery", "custom/notification", "custom/power"],
+
+  "hyprland/workspaces": {
+    // KNOWN UPSTREAM ISSUE: against a Lua-config Hyprland, Waybar's built-in
+    // click and scroll handlers send old-style dispatcher strings that the
+    // Lua dispatcher rejects. Display works; clicking does nothing. Disabled
+    // rather than left as a dead control that looks broken.
+    // Use SUPER + Numpad, SUPER + digit row, or SUPER + scroll instead.
+    "disable-click": true,
+    "disable-scroll": true,
+    "format": "{id}",
+    "persistent-workspaces": { "*": 10 }
+  },
+
+  "hyprland/window": {
+    "format": "{title}",
+    "max-length": 50,
+    "separate-outputs": true    // per-monitor title, correct when docked
+  },
+
+  "clock": {
+    "format": "{:%H:%M}",
+    "format-alt": "{:%A %d %B %Y}",   // click to toggle
+    "tooltip-format": "<tt><small>{calendar}</small></tt>",
+    "calendar": {
+      "mode": "month",
+      "weeks-pos": "right",
+      "format": { "today": "<b><u>{}</u></b>" }
+    }
+  },
+
+  "pulseaudio": {
+    "format": "{icon} {volume}%",
+    "format-muted": "󰝟 muted",
+    "format-icons": { "headphone": "󰋋", "headset": "󰋎", "default": ["󰕿", "󰖀", "󰕾"] },
+    "on-click": "pavucontrol",
+    // -l 1 caps at 100% so scrolling cannot push the sink into software
+    // amplification and distortion.
+    "on-scroll-up":   "wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+",
+    "on-scroll-down": "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
+  },
+
+  "backlight": {
+    "format": "{icon} {percent}%",
+    "format-icons": ["󰃞", "󰃟", "󰃠"],
+    // -e4 perceptual curve, -n2 floor, same as the hardware keys.
+    "on-scroll-up":   "brightnessctl -e4 -n2 set 5%+",
+    "on-scroll-down": "brightnessctl -e4 -n2 set 5%-"
+  },
+
+  "bluetooth": {
+    "format": "󰂯",
+    "format-disabled": "󰂲",
+    "format-connected": "󰂱 {num_connections}",
+    "tooltip-format-connected": "{device_enumerate}",
+    "on-click": "blueman-manager"
+  },
+
+  "network": {
+    "format-wifi": "󰤨 {signalStrength}%",
+    "format-ethernet": "󰈀",
+    "format-disconnected": "󰤭",
+    "tooltip-format-wifi": "{essid} · {ipaddr}",
+    "on-click": "nm-connection-editor"
+  },
+
+  "battery": {
+    "states": { "warning": 30, "critical": 15 },
+    "format": "{icon} {capacity}%",
+    "format-charging": "󰂄 {capacity}%",
+    "format-icons": ["󰁺", "󰁼", "󰁾", "󰂀", "󰁹"],
+    "tooltip-format": "{timeTo} · {power}W"
+  },
+
+  "custom/notification": {
+    // swaync-client -swb streams JSON with the unread count and DND state,
+    // which drives both the icon and the CSS class.
+    "format": "{icon}",
+    "format-icons": { "notification": "󰂚", "none": "󰂜", "dnd-notification": "󰂛", "dnd-none": "󰂛" },
+    "return-type": "json",
+    "exec": "swaync-client -swb",
+    "on-click": "swaync-client -t -sw",
+    "on-click-right": "swaync-client -d -sw",
+    "escape": true
+  },
+
+  "custom/recording": {
+    // Visible only while a recording is running: the script prints nothing
+    // otherwise and Waybar hides empty modules automatically.
+    "format": "{}",
+    "interval": 1,
+    "exec": "$HOME/.config/hypr/scripts/record.sh status",
+    "on-click": "$HOME/.config/hypr/scripts/record.sh stop",
+    "tooltip": false
+  },
+
+  "custom/power": {
+    "format": "󰐥",
+    "on-click": "$HOME/.config/hypr/scripts/powermenu.sh",
+    "tooltip": false
+  },
+
+  "tray": { "spacing": 8, "icon-size": 16 }
+}

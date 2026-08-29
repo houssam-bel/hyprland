@@ -1,0 +1,21 @@
+# AUR. Install with an AUR helper:
+#   yay -S --needed - < packages/aur.txt
+
+# Animated wallpaper daemon. wallpaper.sh prefers awww and falls back to the
+# official-repo `swww` if only that is present — either works.
+awww
+
+# Makes GTK3 apps honour the libadwaita colour names Matugen writes into
+# gtk-3.0/gtk.css. Without it, GTK3 apps largely ignore that file.
+adw-gtk3
+
+# Cursor theme named in environment.lua and the gtk settings.ini files.
+bibata-cursor-theme
+
+# VAAPI screen recorder. record.sh prefers it over wf-recorder when the GPU
+# reports an encode profile.
+wl-screenrec
+
+# Optional: a Qt style that follows the Hyprland palette, so Dolphin tracks
+# the wallpaper too. Set style=hyprqt6engine in qt6ct/qt6ct.conf to use it.
+hyprqt6engine

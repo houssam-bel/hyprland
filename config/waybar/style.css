@@ -1,0 +1,73 @@
+/* ====================================================================
+   Waybar stylesheet
+   ====================================================================
+   Matugen owns colors.css. Everything here references the @define-color
+   names it exports, so a wallpaper change edits zero lines in this file.
+
+   A missing @import is a HARD error that stops Waybar rendering at all —
+   which is why colors.css is committed with a seed palette rather than
+   being generated on first run.
+   ==================================================================== */
+@import "colors.css";
+
+* {
+  font-family: "JetBrainsMono Nerd Font";
+  font-size: 13px;
+  border: none;
+  border-radius: 0;
+  min-height: 0;
+}
+
+window#waybar {
+  background: transparent;   /* the bar body is drawn by .modules-* below */
+}
+
+.modules-left, .modules-center, .modules-right {
+  background: alpha(@surface, 0.85);
+  color: @on_surface;
+  border-radius: 12px;
+  padding: 0 6px;
+}
+
+#workspaces button {
+  padding: 0 8px;
+  color: alpha(@on_surface, 0.5);
+  background: transparent;
+  border-radius: 8px;
+}
+#workspaces button.active  { color: @surface; background: @primary; }
+#workspaces button.urgent  { color: @surface; background: @error; }
+#workspaces button:hover   { color: @on_surface; background: alpha(@primary, 0.25); }
+
+#window { color: alpha(@on_surface, 0.75); padding: 0 8px; }
+#window.empty { background: transparent; }
+
+#clock, #pulseaudio, #backlight, #bluetooth, #network,
+#battery, #tray, #custom-notification, #custom-power, #custom-recording {
+  padding: 0 10px;
+}
+
+#clock { font-weight: bold; }
+
+#pulseaudio.muted     { color: alpha(@on_surface, 0.4); }
+#battery.warning      { color: @secondary; }
+#battery.critical     { color: @error; }
+#network.disconnected { color: @error; }
+#bluetooth.disabled   { color: alpha(@on_surface, 0.4); }
+#custom-notification.dnd-notification,
+#custom-notification.dnd-none { color: alpha(@on_surface, 0.4); }
+#custom-power         { color: @error; }
+
+/* Pulsing indicator while recording. */
+#custom-recording {
+  color: @error;
+  animation: blink 2s ease-in-out infinite;
+}
+@keyframes blink { 50% { opacity: 0.4; } }
+
+tooltip {
+  background: alpha(@surface, 0.95);
+  border: 1px solid @outline;
+  border-radius: 10px;
+}
+tooltip label { color: @on_surface; padding: 4px; }

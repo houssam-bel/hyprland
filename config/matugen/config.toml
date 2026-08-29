@@ -1,0 +1,81 @@
+# ======================================================================
+# Matugen — dynamic colour scheme generation
+# ======================================================================
+#
+# Each [templates.<name>] block renders ONE input template to ONE output
+# path. post_hook runs AFTER that specific file is written, so a consumer
+# reloads only when its own colours actually changed.
+#
+# reload_apps / reload_apps_list are deliberately unused: they are a blunt
+# instrument and their schema has shifted between matugen major versions.
+# Explicit hooks are version-stable and you can read what they do.
+#
+# Regenerate everything by hand with:
+#     matugen image ~/Pictures/Wallpapers/foo.jpg --mode dark
+# which is exactly what ~/.config/hypr/scripts/wallpaper.sh calls.
+# ======================================================================
+
+[config]
+# No global options needed. Wallpaper setting deliberately stays in
+# wallpaper.sh, which already handles daemon liveness, transitions and the
+# state file — matugen's built-in wallpaper support would duplicate that
+# badly and the two copies would drift.
+
+# ---- Hyprland compositor ------------------------------------------------
+# Writes the Lua table settings/look_and_feel.lua requires. `hyprctl reload`
+# re-runs hyprland.lua, and settings/init.lua uncaches the module first, so
+# the new palette is genuinely re-read rather than served from Lua's cache.
+[templates.hyprland]
+input_path  = "~/.config/matugen/templates/hyprland-colors.lua"
+output_path = "~/.config/hypr/settings/colors.lua"
+post_hook   = "hyprctl reload"
+
+# ---- Waybar -------------------------------------------------------------
+# SIGUSR2 makes Waybar reload its config and stylesheet in place.
+[templates.waybar]
+input_path  = "~/.config/matugen/templates/gtk-css-colors.css"
+output_path = "~/.config/waybar/colors.css"
+post_hook   = "pkill -SIGUSR2 waybar || true"
+
+# ---- SwayNC -------------------------------------------------------------
+# Same input template as Waybar: both are GTK CSS, and they were given
+# identical @define-color names on purpose so one template serves both.
+[templates.swaync]
+input_path  = "~/.config/matugen/templates/gtk-css-colors.css"
+output_path = "~/.config/swaync/colors.css"
+post_hook   = "swaync-client -rs || true"
+
+# ---- Rofi ---------------------------------------------------------------
+# No post_hook: rofi is not a daemon, it reads its theme fresh on every
+# launch.
+[templates.rofi]
+input_path  = "~/.config/matugen/templates/rofi-colors.rasi"
+output_path = "~/.config/rofi/colors.rasi"
+
+# ---- Kitty --------------------------------------------------------------
+# SIGUSR1 makes every running kitty re-read its config live, so open
+# terminals recolour instead of waiting to be restarted.
+[templates.kitty]
+input_path  = "~/.config/matugen/templates/kitty-colors.conf"
+output_path = "~/.config/kitty/colors.conf"
+post_hook   = "pkill -SIGUSR1 kitty || true"
+
+# ---- GTK 3 and GTK 4 ----------------------------------------------------
+# One template, two outputs. libadwaita reads gtk-4.0/gtk.css natively;
+# adw-gtk3 makes GTK3 apps honour the same colour names from gtk-3.0.
+# No post_hook — GTK apps pick these up when they next start, and there is
+# no signal that forces a live reload.
+[templates.gtk3]
+input_path  = "~/.config/matugen/templates/gtk-app-colors.css"
+output_path = "~/.config/gtk-3.0/gtk.css"
+
+[templates.gtk4]
+input_path  = "~/.config/matugen/templates/gtk-app-colors.css"
+output_path = "~/.config/gtk-4.0/gtk.css"
+
+# ---- hyprlock -----------------------------------------------------------
+# hyprlock is hyprlang, so this emits $variables that hyprlock.conf pulls in
+# with a `source =` line. No hook: hyprlock reads its config at launch.
+[templates.hyprlock]
+input_path  = "~/.config/matugen/templates/hyprlock-colors.conf"
+output_path = "~/.config/hypr/hyprlock-colors.conf"

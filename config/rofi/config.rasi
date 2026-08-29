@@ -1,0 +1,17 @@
+/* ====================================================================
+   Rofi — behaviour. Appearance lives in theme.rasi.
+   ==================================================================== */
+configuration {
+    modi:                "drun,run,window";
+    font:                "JetBrainsMono Nerd Font 12";
+    show-icons:          true;
+    icon-theme:          "Papirus";
+    drun-display-format: "{name}";
+    display-drun:        "Apps";
+    display-run:         "Run";
+    display-window:      "Windows";
+    kb-cancel:           "Escape,super+d";
+    /* The Wayland backend is auto-selected; no flag needed. */
+}
+
+@theme "~/.config/rofi/theme.rasi"
