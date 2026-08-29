@@ -1,0 +1,84 @@
+#!/usr/bin/env bash
+#
+# wallpaper.sh — set wallpaper via awww, regenerate the Matugen palette.
+#
+# Usage:
+#   wallpaper.sh random          pick at random from WALLPAPER_DIR
+#   wallpaper.sh pick            choose via rofi
+#   wallpaper.sh /path/to/img    set a specific file
+#
+# Light/dark is chosen from image brightness UNLESS theme.sh has pinned a
+# mode. Component reloads are NOT done here — each matugen template owns
+# its own post_hook, so `matugen image X` behaves identically to this script.
+
+set -euo pipefail
+
+WALLPAPER_DIR="${WALLPAPER_DIR:-$HOME/Pictures/Wallpapers}"
+STATE_FILE="$HOME/.cache/current_wallpaper"
+MODE_FILE="$HOME/.cache/theme_mode"
+TRANSITION_TYPE="grow"
+TRANSITION_FPS=60
+TRANSITION_DURATION=1.2
+
+# --- Resolve which image to use ---------------------------------------
+case "${1:-random}" in
+  random)
+    # -print0 / -z keeps filenames with spaces intact through shuf.
+    WALLPAPER=$(find "$WALLPAPER_DIR" -type f \
+      \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' \) \
+      -print0 | shuf -z -n1 | tr -d '\0')
+    ;;
+  pick)
+    WALLPAPER=$(find "$WALLPAPER_DIR" -type f \
+      \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' \) \
+      | rofi -dmenu -i -p "Wallpaper")
+    ;;
+  *)
+    WALLPAPER="$1"
+    ;;
+esac
+
+[[ -z "${WALLPAPER:-}" ]] && { echo "No wallpaper selected." >&2; exit 1; }
+[[ -f "$WALLPAPER" ]]     || { echo "Not a file: $WALLPAPER" >&2; exit 1; }
+
+# --- Ensure the daemon is alive ---------------------------------------
+# `awww query` fails when nothing is listening; that is the liveness probe.
+if ! awww query >/dev/null 2>&1; then
+  awww-daemon &
+  sleep 1
+fi
+
+# --- Apply the wallpaper ----------------------------------------------
+awww img "$WALLPAPER" \
+  --transition-type "$TRANSITION_TYPE" \
+  --transition-fps "$TRANSITION_FPS" \
+  --transition-duration "$TRANSITION_DURATION"
+
+echo "$WALLPAPER" > "$STATE_FILE"
+
+# --- Decide light vs dark ---------------------------------------------
+# Check if a theme is forced via theme.sh
+PINNED_MODE=$(cat "$MODE_FILE" 2>/dev/null || echo "auto")
+
+if [[ "$PINNED_MODE" == "auto" ]]; then
+  # Scale to a single pixel; its grey value is the image's mean luminance.
+  BRIGHTNESS=$(magick "$WALLPAPER" -resize 1x1 -format "%[fx:int(mean*100)]" info: 2>/dev/null || echo 40)
+
+  if (( BRIGHTNESS > 55 )); then
+    MODE="light"
+  else
+    MODE="dark"
+  fi
+  echo "Mean luminance ${BRIGHTNESS}% -> ${MODE} theme"
+else
+  MODE="$PINNED_MODE"
+  echo "Theme pinned to ${MODE} -> skipping luminance check"
+fi
+
+# --- Regenerate the palette -------------------------------------------
+# Matugen handles all post_hooks (reloads) automatically via config.toml
+matugen image "$WALLPAPER" --mode "$MODE"
+
+# --- Update GTK -------------------------------------------------------
+gsettings set org.gnome.desktop.interface color-scheme "prefer-${MODE}" 2>/dev/null || true
+notify-send -a Wallpaper "Theme updated" "$(basename "$WALLPAPER") · ${MODE}" -i "$WALLPAPER" 2>/dev/null || true
