@@ -1,0 +1,44 @@
+{
+  "$schema": "/etc/xdg/swaync/configSchema.json",
+  "positionX": "right",
+  "positionY": "top",
+  "control-center-positionX": "right",
+  "control-center-width": 400,
+  "control-center-height": 700,
+  "control-center-margin-top": 8,
+  "control-center-margin-right": 8,
+  "notification-window-width": 400,
+  "timeout": 6,
+  "timeout-low": 4,
+  "timeout-critical": 0,
+  "fit-to-screen": false,
+  "keyboard-shortcuts": true,
+  "image-visibility": "when-available",
+  "transition-time": 200,
+  "widgets": [
+    "title",
+    "dnd",
+    "buttons-grid",
+    "volume",
+    "backlight",
+    "mpris",
+    "notifications"
+  ],
+  "widget-config": {
+    "title": { "text": "Notifications", "clear-all-button": true, "button-text": "Clear all" },
+    "dnd": { "text": "Do not disturb" },
+    "volume": { "label": "󰕾", "show-per-app": true },
+    "backlight": { "label": "󰃟", "device": "intel_backlight" },
+    "mpris": { "image-size": 84, "image-radius": 10 },
+    "buttons-grid": {
+      "actions": [
+        { "label": "󰖩", "command": "nm-connection-editor" },
+        { "label": "󰂯", "command": "blueman-manager" },
+        { "label": "󰸉", "command": "$HOME/.config/hypr/scripts/wallpaper.sh pick" },
+        { "label": "󰔎", "command": "$HOME/.config/hypr/scripts/theme.sh toggle" },
+        { "label": "󰤄", "command": "systemctl suspend" },
+        { "label": "󰐥", "command": "$HOME/.config/hypr/scripts/powermenu.sh" }
+      ]
+    }
+  }
+}

@@ -1,0 +1,99 @@
+/* ====================================================================
+   Rofi theme
+   ====================================================================
+   The fallback palette comes FIRST. colors.rasi is imported below and
+   overrides every value here — but if that file is missing or half-written
+   (Matugen mid-run), rofi still renders with these instead of failing
+   theme validation and refusing to open at all.
+   ==================================================================== */
+* {
+    primary:     #89b4fa;
+    on-primary:  #1e1e2e;
+    secondary:   #a6e3a1;
+    surface:     #1e1e2e;
+    surface-alt: #313244;
+    on-surface:  #cdd6f4;
+    outline:     #45475a;
+    error:       #f38ba8;
+}
+
+/* Resolved relative to THIS file's directory, so it works whatever the
+   working directory rofi was launched from. */
+@import "colors.rasi"
+
+* {
+    background-color: transparent;
+    text-color:       @on-surface;
+    spacing:          0;
+}
+
+window {
+    width:            40%;
+    border-radius:    14px;
+    background-color: @surface;
+    padding:          16px;
+    children:         [ mainbox ];
+}
+
+mainbox {
+    children: [ inputbar, message, listview ];
+    spacing:  12px;
+}
+
+inputbar {
+    children:         [ prompt, entry ];
+    background-color: @surface-alt;
+    border-radius:    10px;
+    padding:          10px 12px;
+    spacing:          10px;
+}
+
+prompt {
+    text-color: @primary;
+    font:       "JetBrainsMono Nerd Font Bold 12";
+}
+
+entry {
+    placeholder:            "Search…";
+    placeholder-color:      @outline;
+    cursor:                 text;
+}
+
+listview {
+    lines:         8;
+    columns:       1;
+    scrollbar:     false;
+    fixed-height:  false;
+    dynamic:       true;
+    spacing:       4px;
+}
+
+element {
+    padding:       8px 12px;
+    border-radius: 10px;
+    spacing:       10px;
+    cursor:        pointer;
+}
+
+element normal normal   { text-color: @on-surface; }
+element normal urgent   { text-color: @error; }
+element alternate normal { text-color: @on-surface; }
+
+element selected normal {
+    background-color: @primary;
+    text-color:       @on-primary;
+}
+element selected urgent {
+    background-color: @error;
+    text-color:       @surface;
+}
+
+element-icon { size: 1.2em; vertical-align: 0.5; }
+element-text { vertical-align: 0.5; }
+
+message {
+    padding:          8px 12px;
+    border-radius:    10px;
+    background-color: @surface-alt;
+}
+textbox { text-color: @on-surface; }

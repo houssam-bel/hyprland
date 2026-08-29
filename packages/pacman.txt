@@ -1,0 +1,60 @@
+# Official repositories.
+#   sudo pacman -S --needed - < packages/pacman.txt
+# or let the installer do it:
+#   ./install.sh --packages
+
+# ---- Compositor and its ecosystem ----
+hyprland
+hyprlock
+hypridle
+hyprpolkitagent
+hyprpicker
+xdg-desktop-portal-hyprland
+
+# ---- Shell ----
+waybar
+rofi-wayland
+swaync
+kitty
+dolphin
+
+# ---- Theming ----
+matugen
+imagemagick          # mean-luminance detection in wallpaper.sh
+nwg-look             # GTK theme/icon/cursor picker
+qt6ct                # Qt platform theme, see environment.lua
+qt5ct
+
+# ---- Clipboard ----
+wl-clipboard
+cliphist
+
+# ---- Screenshots and recording ----
+grim
+slurp
+swappy
+wf-recorder          # fallback recorder; wl-screenrec (AUR) is preferred
+
+# ---- Hardware control ----
+brightnessctl
+playerctl
+pavucontrol
+bluez
+bluez-utils
+blueman
+network-manager-applet
+
+# ---- Fonts and icons ----
+ttf-jetbrains-mono-nerd
+noto-fonts
+noto-fonts-emoji
+papirus-icon-theme
+
+# ---- Used by the helper scripts ----
+jq                   # screenshot.sh, record.sh
+libnotify            # notify-send
+xdg-user-dirs        # creates ~/Pictures, ~/Videos
+
+# ---- Handy while configuring ----
+wev                  # prints keysyms and XKB keycodes; see keybindings.lua §4
+libva-utils          # vainfo, which record.sh probes for hardware encoding

@@ -1,0 +1,35 @@
+-- ======================================================================
+---- PERMISSIONS ----
+-- ======================================================================
+--
+-- Hyprland's ecosystem permission system gates which binaries may use
+-- privileged protocols (screencopy, keyboard grabs, plugin loading).
+--
+-- Changes here require a full Hyprland RESTART, not a reload — that is a
+-- deliberate security property, not a bug.
+--
+-- LEFT OFF BY DEFAULT. Turning enforcement on without the allow rules
+-- below breaks screenshots, screen sharing and OBS with no visible error:
+-- grim simply captures nothing. Enable both halves together or neither.
+--
+-- Docs: https://wiki.hypr.land/Configuring/Advanced-and-Cool/Permissions/
+-- ======================================================================
+
+-- hl.config({
+--     ecosystem = {
+--         enforce_permissions = true,
+--     },
+-- })
+--
+-- -- Screenshots and region capture.
+-- hl.permission("/usr/(bin|local/bin)/grim", "screencopy", "allow")
+-- hl.permission("/usr/(bin|local/bin)/slurp", "screencopy", "allow")
+-- -- Colour picker.
+-- hl.permission("/usr/(bin|local/bin)/hyprpicker", "screencopy", "allow")
+-- -- Screen sharing through the portal (Discord, OBS, browsers).
+-- hl.permission("/usr/(lib|libexec|lib64)/xdg-desktop-portal-hyprland", "screencopy", "allow")
+-- -- Screen recorders.
+-- hl.permission("/usr/(bin|local/bin)/wf-recorder", "screencopy", "allow")
+-- hl.permission("/usr/(bin|local/bin)/wl-screenrec", "screencopy", "allow")
+-- -- Plugin manager.
+-- hl.permission("/usr/(bin|local/bin)/hyprpm", "plugin", "allow")
